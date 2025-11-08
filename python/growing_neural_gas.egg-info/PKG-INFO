@@ -36,7 +36,7 @@ The project uses a PEP 517 build powered by `setuptools` and `pybind11`. A C++17
 ```bash
 conda create -n gng python=3.10 -y
 conda activate gng
-conda install -c conda-forge setuptools wheel pybind11 gcc_linux-64 gxx_linux-64 -y
+conda install -c conda-forge setuptools wheel pybind11 boost gcc_linux-64 gxx_linux-64 pytest -y
 pip install -e .
 ```
 
