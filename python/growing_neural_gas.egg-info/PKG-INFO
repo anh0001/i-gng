@@ -17,11 +17,11 @@ License-File: LICENSE
 Requires-Dist: numpy>=1.23
 Dynamic: license-file
 
-# Growing Neural Gas (Python)
+# Growing Neural Gas
 
-This repository contains a high-performance C++ implementation of the online Growing Neural Gas (GNG) clustering algorithm together with brand-new Python bindings powered by [pybind11](https://pybind11.readthedocs.io/). The legacy R wrapper has been removed – everything you need now ships as a standard Python package.
+This repository contains a high-performance C++ implementation of the online Growing Neural Gas (GNG) clustering algorithm together with Python bindings powered by [pybind11](https://pybind11.readthedocs.io/).
 
-The goals of the project remain the same:
+Goals:
 
 - **Fast online clustering** that can adapt to non-stationary streams.
 - **Compact graph output** describing cluster topology.
@@ -29,16 +29,20 @@ The goals of the project remain the same:
 
 ## Installation
 
-The project uses a PEP 517 build powered by `setuptools` and `pybind11`. Build and install it in editable mode while developing:
+The project uses a PEP 517 build powered by `setuptools` and `pybind11`. A C++17-capable compiler is required.
+
+### Using conda (recommended)
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -U pip
+conda create -n gng python=3.10 -y
+conda activate gng
+conda install -c conda-forge setuptools wheel pybind11 gcc_linux-64 gxx_linux-64 -y
 pip install -e .
 ```
 
-This compiles the extension against your system toolchain (a C++17-capable compiler is required).
+**Note:** On macOS, replace `gcc_linux-64 gxx_linux-64` with `clang_osx-64 clangxx_osx-64`. On Windows, use `cxx-compiler`.
+
+This compiles the extension against your system toolchain.
 
 ## Quick start
 

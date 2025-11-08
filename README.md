@@ -10,16 +10,20 @@ Goals:
 
 ## Installation
 
-The project uses a PEP 517 build powered by `setuptools` and `pybind11`. Build and install it in editable mode while developing:
+The project uses a PEP 517 build powered by `setuptools` and `pybind11`. A C++17-capable compiler is required.
+
+### Using conda (recommended)
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -U pip
+conda create -n gng python=3.10 -y
+conda activate gng
+conda install -c conda-forge setuptools wheel pybind11 gcc_linux-64 gxx_linux-64 -y
 pip install -e .
 ```
 
-This compiles the extension against your system toolchain (a C++17-capable compiler is required).
+**Note:** On macOS, replace `gcc_linux-64 gxx_linux-64` with `clang_osx-64 clangxx_osx-64`. On Windows, use `cxx-compiler`.
+
+This compiles the extension against your system toolchain.
 
 ## Quick start
 

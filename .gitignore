@@ -3,6 +3,9 @@
 *.lo
 *.o
 *.obj
+AGENTS.md
+CLAUDE.md
+.github/
 
 # Precompiled Headers
 *.gch
