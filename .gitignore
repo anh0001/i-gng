@@ -1,6 +1,3 @@
-# Prerequisites
-*.d
-
 # Compiled Object files
 *.slo
 *.lo
@@ -11,12 +8,6 @@
 *.gch
 *.pch
 
-# Linker files
-*.ilk
-
-# Debugger Files
-*.pdb
-
 # Compiled Dynamic libraries
 *.so
 *.dylib
@@ -24,7 +15,6 @@
 
 # Fortran module files
 *.mod
-*.smod
 
 # Compiled Static libraries
 *.lai
@@ -37,5 +27,17 @@
 *.out
 *.app
 
-# debug information files
-*.dwo
+# GNG
+*.graphml
+
+# Specific
+.depend/
+build/
+*.so
+*.o
+*.d
+*~
+data/
+/TestParts/
+/TestIntegrationFix/
+/Debug/
