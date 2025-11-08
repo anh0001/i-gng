@@ -1,3 +1,0 @@
-import(igraph)
-useDynLib(GrowingNeuralGas)
-exportPattern("^[[:alpha:]]+")

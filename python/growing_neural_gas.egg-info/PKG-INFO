@@ -1,8 +1,27 @@
-# Growing Neural Gas
+Metadata-Version: 2.4
+Name: growing-neural-gas
+Version: 0.1.0
+Summary: Python bindings for the Growing Neural Gas algorithm
+Home-page: https://github.com/gmum/Growing-Neural-Gas
+Author: Stanislaw "kudkudak" Jastrzebski and contributors
+License: MIT
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: C++
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: MacOS
+Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: numpy>=1.23
+Dynamic: license-file
 
-This repository contains a high-performance C++ implementation of the online Growing Neural Gas (GNG) clustering algorithm together with Python bindings powered by [pybind11](https://pybind11.readthedocs.io/).
+# Growing Neural Gas (Python)
 
-Goals:
+This repository contains a high-performance C++ implementation of the online Growing Neural Gas (GNG) clustering algorithm together with brand-new Python bindings powered by [pybind11](https://pybind11.readthedocs.io/). The legacy R wrapper has been removed – everything you need now ships as a standard Python package.
+
+The goals of the project remain the same:
 
 - **Fast online clustering** that can adapt to non-stationary streams.
 - **Compact graph output** describing cluster topology.

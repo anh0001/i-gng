@@ -1,0 +1,5 @@
+recursive-include inst/include *.h *.hpp
+recursive-include src *.cpp *.hpp *.h
+include README.md
+include LICENSE
+

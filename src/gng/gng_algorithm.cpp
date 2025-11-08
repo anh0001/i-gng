@@ -666,7 +666,7 @@ void GNGAlgorithm::runAlgorithm() { //1 thread needed to do it (the one that com
 				accumulated_error_count > 15 * m_g.get_number_nodes()) {
 			gmum::scoped_lock<gmum::fast_mutex> stat_lock(m_statistics_mutex);
 
-			m_mean_error.push_back(make_pair<double, double>(time_elapsed,
+			m_mean_error.push_back(std::make_pair(time_elapsed,
 					accumulated_error/(double)accumulated_error_count
 					));
 
@@ -786,7 +786,7 @@ double GNGAlgorithm::getMeanError() {
 vector<pair<double, double> > GNGAlgorithm::getMeanErrorStatistics() {
 	gmum::scoped_lock<gmum::fast_mutex> alg_lock(m_statistics_mutex);
 	if(m_mean_error.size() == 0){
-		return vector<pair<double, double> >(1, make_pair<double,double>(0., std::numeric_limits<double>::max()));
+	return vector<pair<double, double> >(1, std::make_pair(0., std::numeric_limits<double>::max()));
 	}else{
 		return vector<pair<double, double> >(m_mean_error.begin(), m_mean_error.end());
 	}
