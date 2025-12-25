@@ -622,7 +622,12 @@ void GNGAlgorithm::runAlgorithm() { //1 thread needed to do it (the one that com
 		double dt =0.;
 		boost::posix_time::ptime start = boost::posix_time::microsec_clock::local_time();
 
+		bool pause_requested = false;
 		for (s = 0; s < m_lambda; ++s) { //global counter!!
+			if (m_gng_status_request != GNG_RUNNING) {
+				pause_requested = true;
+				break;
+			}
 
 			const double * position, *vertex_data;
 			unsigned int ex = 0;
@@ -647,6 +652,10 @@ void GNGAlgorithm::runAlgorithm() { //1 thread needed to do it (the one that com
 			set_clustering(ex, adapt_result.second);
 			accumulated_error += adapt_result.first;
 			accumulated_error_count += 1;
+		}
+
+		if (pause_requested) {
+			continue;
 		}
 
 #ifdef GMUM_DEBUG_2
