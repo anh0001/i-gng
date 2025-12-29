@@ -57,6 +57,7 @@ public:
 			double lambda = 200, double eps_w = 0.05, double eps_n = 0.0006,
 			int dim = 3, bool uniformgrid_optimization = true,
 			bool lazyheap_optimization = true, bool grow_on_new_samples = false,
+			int new_node_position_mode = GNGConfiguration::NewNodeMidpoint,
 			unsigned int utility_option =
 					GNGConfiguration::UtilityOff, double utility_k = -1,
 			boost::shared_ptr<Logger> logger = boost::shared_ptr<Logger>());
@@ -141,6 +142,7 @@ public:
 	vector<int> clustering_result;
 private:
 	bool m_grow_on_new_samples;
+	int m_new_node_position_mode;
 	unsigned int m_last_dataset_size_for_growth;
 	//Main algorithm methods
 

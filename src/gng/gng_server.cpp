@@ -125,6 +125,7 @@ void GNGServer::init(GNGConfiguration configuration,
 					current_configuration.uniformgrid_optimization,
 					current_configuration.lazyheap_optimization,
 					current_configuration.grow_on_new_samples,
+					current_configuration.new_node_position_mode,
 					current_configuration.experimental_utility_option,
 					current_configuration.experimental_utility_k, m_logger));
 

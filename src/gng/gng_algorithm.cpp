@@ -81,6 +81,7 @@ GNGAlgorithm::GNGAlgorithm(GNGGraph * g, GNGDataset* db,
 		int max_nodes, int max_age, double alpha, double betha, double lambda,
 		double eps_w, double eps_n, int dim, bool uniformgrid_optimization,
 		bool lazyheap_optimization, bool grow_on_new_samples,
+		int new_node_position_mode,
 		unsigned int utility_option, double utility_k,
 		boost::shared_ptr<Logger> logger) :
 		m_g(*g), g_db(db), c(0), s(0), m_max_nodes(max_nodes), m_max_age(
@@ -94,6 +95,7 @@ GNGAlgorithm::GNGAlgorithm(GNGGraph * g, GNGDataset* db,
 				m_gng_status(GNG_TERMINATED),
 				m_gng_status_request(GNG_TERMINATED),
 				m_grow_on_new_samples(grow_on_new_samples),
+				m_new_node_position_mode(new_node_position_mode),
 				m_last_dataset_size_for_growth(0) {
 
 	DBG(m_logger, 1, "GNGAlgorithm:: Constructing object");
@@ -227,11 +229,32 @@ void GNGAlgorithm::addNewNode() {
 	
 
 	double position[this->dim]; //param
+	bool use_sample_position = false;
+	double sample_extra_value = 0.0;
+	bool sample_extra_valid = false;
 
-	//TODO: < GNG_DIM?
-	for (int i = 0; i < this->dim; ++i) //param
-		position[i] = (error_nodes_new[0]->position[i]
-				+ error_nodes_new[1]->position[i]) / 2;
+	if (m_new_node_position_mode == GNGConfiguration::NewNodeLastSample) {
+		gmum::scoped_lock<GNGDataset> db_lock(*g_db);
+		const int dataset_size = g_db->size();
+		if (dataset_size > 0) {
+			const double * sample_pos = g_db->getPosition(dataset_size - 1);
+			for (int i = 0; i < this->dim; ++i)
+				position[i] = sample_pos[i];
+			const double * sample_extra = g_db->getExtraData(dataset_size - 1);
+			if (sample_extra) {
+				sample_extra_value = sample_extra[0];
+				sample_extra_valid = true;
+			}
+			use_sample_position = true;
+		}
+	}
+
+	if (!use_sample_position) {
+		//TODO: < GNG_DIM?
+		for (int i = 0; i < this->dim; ++i) //param
+			position[i] = (error_nodes_new[0]->position[i]
+					+ error_nodes_new[1]->position[i]) / 2;
+	}
 
 	//In case pool has been reallocated
 	int er_nr1 = error_nodes_new[0]->nr, er_nr2 = error_nodes_new[1]->nr;
@@ -240,8 +263,12 @@ void GNGAlgorithm::addNewNode() {
 	error_nodes_new[1] = &m_g[er_nr2];
 
 	//Vote for extra data
-	m_g[new_node_index].extra_data = (error_nodes_new[0]->extra_data
-			+ error_nodes_new[1]->extra_data) / 2.0;
+	if (use_sample_position && sample_extra_valid) {
+		m_g[new_node_index].extra_data = sample_extra_value;
+	} else {
+		m_g[new_node_index].extra_data = (error_nodes_new[0]->extra_data
+				+ error_nodes_new[1]->extra_data) / 2.0;
+	}
 
 	if (m_toggle_uniformgrid)
 		ug->insert(m_g[new_node_index].position, new_node_index);

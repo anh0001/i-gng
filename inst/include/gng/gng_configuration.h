@@ -35,6 +35,11 @@ public:
 		UtilityOff, UtilityBasicOn
 	};
 
+	enum NewNodePosition {
+		NewNodeMidpoint = 0,
+		NewNodeLastSample = 1
+	};
+
 	/**Maximum number of nodes*/
 	int max_nodes; //=1000;
 	/**Uniform grid optimization*/
@@ -58,6 +63,8 @@ public:
 	double lambda; //=200;
 	/**Only grow when new samples are inserted into the dataset*/
 	bool grow_on_new_samples;
+	/**Placement strategy for new nodes*/
+	int new_node_position_mode;
 	/**Epsilion v. How strongly move winning node*/
 	double eps_w; //=0.05;
 	/**Memory bound*/
@@ -109,6 +116,7 @@ public:
 		beta = 0.9995;
 		lambda = 200;
 		grow_on_new_samples = false;
+		new_node_position_mode = NewNodeMidpoint;
 		eps_w = 0.05;
 		eps_n = 0.0006;
 
