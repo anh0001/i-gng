@@ -185,6 +185,7 @@ PYBIND11_MODULE(_core, m) {
 			.def_readwrite("alpha", &GNGConfiguration::alpha)
 			.def_readwrite("beta", &GNGConfiguration::beta)
 			.def_readwrite("lambda_", &GNGConfiguration::lambda)
+			.def_readwrite("grow_on_new_samples", &GNGConfiguration::grow_on_new_samples)
 			.def_readwrite("eps_w", &GNGConfiguration::eps_w)
 			.def_readwrite("eps_n", &GNGConfiguration::eps_n)
 			.def_readwrite("verbosity", &GNGConfiguration::verbosity)

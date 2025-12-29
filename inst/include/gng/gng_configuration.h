@@ -56,6 +56,8 @@ public:
 	double beta; //=0.9995;
 	/**Lambda coefficient*/
 	double lambda; //=200;
+	/**Only grow when new samples are inserted into the dataset*/
+	bool grow_on_new_samples;
 	/**Epsilion v. How strongly move winning node*/
 	double eps_w; //=0.05;
 	/**Memory bound*/
@@ -106,6 +108,7 @@ public:
 		alpha = 0.95;
 		beta = 0.9995;
 		lambda = 200;
+		grow_on_new_samples = false;
 		eps_w = 0.05;
 		eps_n = 0.0006;
 
@@ -275,4 +278,3 @@ public:
 	}
 };
 #endif	/* GNGCONFIGURATION_H */
-

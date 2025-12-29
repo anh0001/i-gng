@@ -80,8 +80,9 @@ GNGAlgorithm::GNGAlgorithm(GNGGraph * g, GNGDataset* db,
 		double * boundingbox_origin, double * boundingbox_axis, double l,
 		int max_nodes, int max_age, double alpha, double betha, double lambda,
 		double eps_w, double eps_n, int dim, bool uniformgrid_optimization,
-		bool lazyheap_optimization, unsigned int utility_option,
-		double utility_k, boost::shared_ptr<Logger> logger) :
+		bool lazyheap_optimization, bool grow_on_new_samples,
+		unsigned int utility_option, double utility_k,
+		boost::shared_ptr<Logger> logger) :
 		m_g(*g), g_db(db), c(0), s(0), m_max_nodes(max_nodes), m_max_age(
 				max_age), m_alpha(alpha), m_betha(betha), m_lambda(lambda), m_eps_w(
 				eps_w), m_eps_n(eps_n), m_density_threshold(0.1), m_grow_rate(
@@ -91,7 +92,9 @@ GNGAlgorithm::GNGAlgorithm(GNGGraph * g, GNGDataset* db,
 				utility_option), m_mean_error(1000), m_utility_k(utility_k), m_logger(
 				logger), m_iteration(0),
 				m_gng_status(GNG_TERMINATED),
-				m_gng_status_request(GNG_TERMINATED) {
+				m_gng_status_request(GNG_TERMINATED),
+				m_grow_on_new_samples(grow_on_new_samples),
+				m_last_dataset_size_for_growth(0) {
 
 	DBG(m_logger, 1, "GNGAlgorithm:: Constructing object");
 	DBG(m_logger, 10,
@@ -595,6 +598,10 @@ void GNGAlgorithm::runAlgorithm() { //1 thread needed to do it (the one that com
 		cerr << "Incorrect passed graph to GNGAlgorithm. Aborting\n";
 		throw BasicException("Incorrect passed graph to GNGAlgorithm");
 	}
+	if (m_grow_on_new_samples) {
+		gmum::scoped_lock<GNGDataset> db_lock(*g_db);
+		m_last_dataset_size_for_growth = g_db->size();
+	}
 
 	//We have to calculate error so we will collect error from adapt
 	//and when count is > dataset size we will set m_mean_error
@@ -685,9 +692,29 @@ void GNGAlgorithm::runAlgorithm() { //1 thread needed to do it (the one that com
 			accumulated_error_count = 0;
 		}
 
+		bool allow_growth = true;
+		if (m_grow_on_new_samples) {
+			unsigned int dataset_size = 0;
+			{
+				gmum::scoped_lock<GNGDataset> db_lock(*g_db);
+				dataset_size = g_db->size();
+			}
+			if (dataset_size < m_last_dataset_size_for_growth) {
+				m_last_dataset_size_for_growth = dataset_size;
+			}
+			allow_growth = dataset_size > m_last_dataset_size_for_growth;
+		}
+
 		{
 			gmum::scoped_lock<GNGGraph> graph_lock(m_g);
-			addNewNode();
+			if (allow_growth) {
+				unsigned int nodes_before = m_g.get_number_nodes();
+				addNewNode();
+				unsigned int nodes_after = m_g.get_number_nodes();
+				if (m_grow_on_new_samples && nodes_after > nodes_before) {
+					m_last_dataset_size_for_growth += 1;
+				}
+			}
 
 			if (m_toggle_uniformgrid && ug->check_grow()) {
 				DBG(m_logger, 10, "GNGAlgorithm:: resizing uniform grid");
